@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $RedRiver: todo.pl,v 1.13 2010/01/11 02:35:39 andrew Exp $
+# $AFresh1: todo.pl,v 1.18 2010/01/19 18:53:36 andrew Exp $
 ########################################################################
 # todo.pl *** a perl version of todo.sh. Uses Text::Todo.
 #
@@ -13,12 +13,10 @@
 use strict;
 use warnings;
 
-use Data::Dumper;
-
 use Getopt::Std;
 use Text::Todo;
 
-use version; our $VERSION = qv('0.0.1');
+use version; our $VERSION = qv('0.1.0');
 
 # option defaults
 my $config_file = $ENV{HOME} . '/todo.cfg';
@@ -69,7 +67,7 @@ my %aliases = (
 );
 
 my %opts;
-getopts( '@+d:fhpPntvV', \%opts );
+getopts( q{+d:fhpPntvV@}, \%opts );
 
 my $action = shift @ARGV;
 if ( $action && $action eq 'command' ) {
@@ -96,7 +94,7 @@ if ( $opts{d} ) {
 
 if ( exists $actions{$action} ) {
     my $config = read_config($config_file);
-    my $action = $actions{$action}->( $config, @ARGV );
+    my $result = $actions{$action}->( $config, @ARGV );
 }
 else {
     usage();
@@ -174,7 +172,9 @@ sub archive {
     die "Unable to archive $file\n";
 }
 
+## no critic 'sigal'
 sub command { return &unsupported }
+## use critic
 
 sub del {
     my ( $config, $line ) = @_;
@@ -184,7 +184,7 @@ sub del {
     my $todo = Text::Todo->new($config);
 
     my $entry = $todo->list->[ $line - 1 ];
-    print "Delete '" . $entry->text . "'?  (y/n)\n";
+    print 'Delete \'', $entry->text . "'?  (y/n)\n";
     warn "XXX No delete confirmation currently!\n";
 
     if ( $opts{n} ) {
@@ -218,7 +218,7 @@ sub depri {
 }
 
 # since "do" is reserved
-sub mark_done { 
+sub mark_done {
     my ( $config, $line ) = @_;
     if ( !( $line && $line =~ /^\d+$/xms ) ) {
         die 'usage: todo.pl del ITEM#' . "\n";
@@ -230,7 +230,7 @@ sub mark_done {
     if ( $entry->do && $todo->save ) {
         my $status = print $line, ': ', $entry->text, "\n",
             'TODO: ', $line, " marked as done.\n";
-        if (!$opts{a}) {
+        if ( !$opts{a} ) {
             return archive($config);
         }
         return $status;
@@ -238,7 +238,9 @@ sub mark_done {
     die "Unable to mark as done\n";
 }
 
-sub help      { return &unsupported }
+## no critic 'sigal'
+sub help { return &unsupported }
+## use critic
 
 sub list {
     my ( $config, $term ) = @_;
@@ -291,7 +293,7 @@ sub listpri {
     my @pri_list;
     if ($pri) {
         $pri = uc $pri;
-        if ( $pri !~ /^[A-Z]$/xms ) {
+        if ( $pri !~ /^[[:upper:]]$/xms ) {
             die "usage: todo.pl listpri PRIORITY\n",
                 "note: PRIORITY must a single letter from A to Z.\n";
         }
@@ -315,7 +317,9 @@ sub listproj {
     return print map {"\+$_\n"} $todo->listproj;
 }
 
+## no critic 'sigal'
 sub move { return &unsupported }
+## use critic
 
 sub prepend {
     my ( $config, $line, @text ) = @_;
@@ -338,11 +342,11 @@ sub pri {
     my ( $config, $line, $priority ) = @_;
     my $error = 'usage: todo.pl pri ITEM# PRIORITY';
     if ( !( $line && $line =~ /^\d+$/xms && $priority ) ) {
-        die $error;
+        die "$error\n";
     }
-    if ( $priority !~ /^[A-Z]$/xms ) {
-        die $error . "\n"
-            . "note: PRIORITY must a single letter from A to Z.\n";
+    elsif ( $priority !~ /^[[:upper:]]$/xms ) {
+        $error .= "\n" . 'note: PRIORITY must a single letter from A to Z.';
+        die "$error\n";
     }
 
     my $todo = Text::Todo->new($config);
@@ -355,8 +359,10 @@ sub pri {
     die "Unable to prioritize entry\n";
 }
 
+## no critic 'sigal'
 sub replace { return &unsupported }
 sub report  { return &unsupported }
+## use critic
 
 sub _number_list {
     my (@list) = @_;
@@ -367,14 +373,14 @@ sub _number_list {
 
 sub _show_sorted_list {
     my ( $term, @list ) = @_;
-    $term = defined $term ? quotemeta($term) : '';
+    $term = defined $term ? quotemeta($term) : q{};
 
     my $shown = 0;
-    my @sorted = map { sprintf "%02d %s", $_->{line}, $_->{entry}->text }
+    my @sorted = map { sprintf '%02d %s', $_->{line}, $_->{entry}->text }
         sort { lc $a->{entry}->text cmp lc $b->{entry}->text } @list;
 
     foreach my $line ( grep {/$term/xms} @sorted ) {
-        print $line, "\n";
+        print "$line\n";
         $shown++;
     }
 
@@ -442,38 +448,46 @@ sub read_config {
     my ($file) = @_;
 
     my %config;
-    open my $fh, '<', $file or die "Unable to open [$file] : $!";
+    open my $fh, '<', $file or die "Unable to open [$file] : $!\n";
 LINE: while (<$fh>) {
-        s/\r?\n$//xms;
-        s/\s*\#.*$//xms;
-        next LINE unless $_;
-
-        if (s/^\s*export\s+//xms) {
-            my ( $key, $value ) = /^([^=]+)\s*=\s*"?(.*?)"?\s*$/xms;
-            if ($key) {
-                foreach my $k ( keys %config ) {
-                    $value =~ s/\$\Q$k\E/$config{$k}/gxms;
-                    $value =~ s/\${\Q$k\E}/$config{$k}/gxms;
-                }
-                foreach my $k ( keys %ENV ) {
-                    $value =~ s/\$\Q$k\E/$ENV{$k}/gxms;
-                    $value =~ s/\${\Q$k\E}/$ENV{$k}/gxms;
-                }
-                $value =~ s/\$\w+//gxms;
-                $value =~ s/\${\w+}//gxms;
-
-                $config{$key} = $value;
-            }
-        }
+        _parse_line( $_, \%config );
     }
-    close $fh;
+    close $fh or die "Unable to close [$file]: $!\n";
 
     my %lc_config;
     foreach my $k ( keys %config ) {
-        $lc_config{ lc($k) } = $config{$k};
+        $lc_config{ lc $k } = $config{$k};
     }
 
     return \%lc_config;
+}
+
+sub _parse_line {
+    my ( $line, $config ) = @_;
+
+    $line =~ s/\r?\n$//xms;
+    $line =~ s/\s*\#.*$//xms;
+    return if !$line;
+
+    if (s/^\s*export\s+//xms) {
+        my ( $key, $value ) = /^([^=]+)\s*=\s*"?(.*?)"?\s*$/xms;
+        if ($key) {
+            foreach my $k ( keys %config ) {
+                $value =~ s/\$\Q$k\E/$config{$k}/gxms;
+                $value =~ s/\${\Q$k\E}/$config{$k}/gxms;
+            }
+            foreach my $k ( keys %ENV ) {
+                $value =~ s/\$\Q$k\E/$ENV{$k}/gxms;
+                $value =~ s/\${\Q$k\E}/$ENV{$k}/gxms;
+            }
+            $value =~ s/\$\w+//gxms;
+            $value =~ s/\${\w+}//gxms;
+
+            $config->{$key} = $value;
+        }
+    }
+
+    return 1;
 }
 
 __END__
@@ -488,7 +502,7 @@ todo.pl - a perl replacement for todo.sh
 Since the $VERSION can't be automatically included, 
 here is the RCS Id instead, you'll have to look up $VERSION.
 
-    $Id: todo.pl,v 1.13 2010/01/11 02:35:39 andrew Exp $
+    $Id: todo.pl,v 1.18 2010/01/19 18:53:36 andrew Exp $
 
 
 =head1 SYNOPSIS
@@ -502,6 +516,8 @@ here is the RCS Id instead, you'll have to look up $VERSION.
 Mostly compatible with todo.sh but not completely.
 Any differences are either noted under limitations is a bug.
 
+Ideally todo.pl should pass all the todo.sh tests.
+
 This is a proof of concept to get the Text::Todo modules used. 
 
 The modules are there to give more access to my todo.txt file from more
@@ -510,6 +526,17 @@ my Palm Pre.
 
 For more information see L<http://todotxt.com>
 
+=head1 USAGE
+
+See todo.pl -h
+
+=head1 OPTIONS
+
+See todo.pl -h
+
+=head1 REQUIRED ARGUMENTS
+
+See todo.pl -h
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -521,6 +548,7 @@ It only uses TODO_DIR, TODO_FILE and DONE_DIR
 It does not currently support any of the environment variables that todo.sh
 uses.
 
+=head1 DIAGNOSTICS
 
 =head1 DEPENDENCIES 
 

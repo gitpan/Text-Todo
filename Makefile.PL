@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-# $RedRiver: Makefile.PL,v 1.1.1.1 2009/07/09 18:21:34 andrew Exp $
+# $AFresh1: Makefile.PL,v 1.2 2010/01/11 19:52:06 andrew Exp $
 
 WriteMakefile(
     NAME                => 'Text::Todo',

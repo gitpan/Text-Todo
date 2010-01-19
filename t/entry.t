@@ -7,7 +7,7 @@
 #       AUTHOR:  Andrew Fresh (AAF), andrew@cpan.org
 #      COMPANY:  Red River Communications
 #      CREATED:  07/10/09 11:32:39
-#     REVISION:  $RedRiver: entry.t,v 1.10 2010/01/11 01:30:24 andrew Exp $
+#     REVISION:  $AFresh1: entry.t,v 1.13 2010/01/15 19:50:15 andrew Exp $
 #===============================================================================
 
 use strict;
@@ -15,9 +15,11 @@ use warnings;
 
 use Test::More tests => 40;
 
-my $class = 'Text::Todo::Entry';
-
-BEGIN: { use_ok( $class, "use $class" ) }
+my $class;
+BEGIN { 
+	$class = 'Text::Todo::Entry';
+	use_ok( $class, "use $class" ) 
+}
 
 diag("Testing entry $class $Text::Todo::Entry::VERSION");
 

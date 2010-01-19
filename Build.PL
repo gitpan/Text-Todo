@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Module::Build;
-# $RedRiver: Build.PL,v 1.2 2010/01/11 02:57:34 andrew Exp $
+# $AFresh1: Build.PL,v 1.5 2010/01/18 02:46:48 andrew Exp $
 
 my $builder = Module::Build->new(
     module_name         => 'Text::Todo',

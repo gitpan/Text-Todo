@@ -7,7 +7,7 @@
 #       AUTHOR:  Andrew Fresh (AAF), andrew@cpan.org
 #      COMPANY:  Red River Communications
 #      CREATED:  01/09//10 17:43
-#     REVISION:  $RedRiver: special_tags.t,v 1.2 2010/01/10 19:29:17 andrew Exp $
+#     REVISION:  $AFresh1: special_tags.t,v 1.5 2010/01/15 19:50:15 andrew Exp $
 #===============================================================================
 
 use strict;
@@ -15,9 +15,11 @@ use warnings;
 
 use Test::More tests => 7;
 
-my $class = 'Text::Todo::Entry';
-
-BEGIN: { use_ok( $class, "use $class" ) }
+my $class;
+BEGIN { 
+	$class = 'Text::Todo::Entry';
+	use_ok( $class, "use $class" ) 
+}
 
 diag("Testing special tags in $class $Text::Todo::Entry::VERSION");
 

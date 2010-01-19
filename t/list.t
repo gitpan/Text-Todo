@@ -8,7 +8,7 @@
 #       AUTHOR:  Andrew Fresh (AAF), andrew@cpan.org
 #      COMPANY:  Red River Communications
 #      CREATED:  01/07/10 19:11
-#     REVISION:  $RedRiver: list.t,v 1.8 2010/01/10 22:39:26 andrew Exp $
+#     REVISION:  $AFresh1: list.t,v 1.13 2010/01/18 02:46:48 andrew Exp $
 #===============================================================================
 
 use strict;
@@ -17,11 +17,12 @@ use warnings;
 use Test::More tests => 53;
 
 use File::Temp qw/ tempdir /;
-use Data::Dumper;
 
-my $class = 'Text::Todo';
-
-BEGIN: { use_ok( $class, "use $class" ) }
+my $class;
+BEGIN { 
+	$class = 'Text::Todo';
+	use_ok( $class, "use $class" ) 
+}
 
 diag("Testing entry $class $Text::Todo::VERSION");
 
