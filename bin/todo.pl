@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $AFresh1: todo.pl,v 1.18 2010/01/19 18:53:36 andrew Exp $
+# $AFresh1: todo.pl,v 1.20 2010/01/22 01:30:45 andrew Exp $
 ########################################################################
 # todo.pl *** a perl version of todo.sh. Uses Text::Todo.
 #
@@ -16,7 +16,7 @@ use warnings;
 use Getopt::Std;
 use Text::Todo;
 
-use version; our $VERSION = qv('0.1.0');
+use version; our $VERSION = qv('0.1.1');
 
 # option defaults
 my $config_file = $ENV{HOME} . '/todo.cfg';
@@ -472,9 +472,9 @@ sub _parse_line {
     if (s/^\s*export\s+//xms) {
         my ( $key, $value ) = /^([^=]+)\s*=\s*"?(.*?)"?\s*$/xms;
         if ($key) {
-            foreach my $k ( keys %config ) {
-                $value =~ s/\$\Q$k\E/$config{$k}/gxms;
-                $value =~ s/\${\Q$k\E}/$config{$k}/gxms;
+            foreach my $k ( keys %{ $config } ) {
+                $value =~ s/\$\Q$k\E/$config->{$k}/gxms;
+                $value =~ s/\${\Q$k\E}/$config->{$k}/gxms;
             }
             foreach my $k ( keys %ENV ) {
                 $value =~ s/\$\Q$k\E/$ENV{$k}/gxms;
@@ -502,7 +502,7 @@ todo.pl - a perl replacement for todo.sh
 Since the $VERSION can't be automatically included, 
 here is the RCS Id instead, you'll have to look up $VERSION.
 
-    $Id: todo.pl,v 1.18 2010/01/19 18:53:36 andrew Exp $
+    $Id: todo.pl,v 1.20 2010/01/22 01:30:45 andrew Exp $
 
 
 =head1 SYNOPSIS
