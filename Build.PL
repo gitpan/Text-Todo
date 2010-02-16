@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Module::Build;
 
-# $AFresh1: Build.PL,v 1.8 2010/01/22 01:30:45 andrew Exp $
+# $AFresh1: Build.PL,v 1.10 2010/02/16 01:13:12 andrew Exp $
 
 my $builder = Module::Build->new(
     module_name       => 'Text::Todo',
@@ -13,16 +13,21 @@ my $builder = Module::Build->new(
         'Carp'              => 0,
         'Class::Std::Utils' => 0,
         'File::Spec'        => 0,
-        'Test::More'        => 0.82,
         'version'           => 0,
+    },
+    build_requires     => {
+        'Test::More'        => 0.82,
     },
     add_to_cleanup     => [
         'Text-Todo-*',
         'MANIFEST',
         'META.yml',
         'Makefile.PL',
+        'LICENSE',
+        'README',
     ],
     create_makefile_pl => 'traditional',
+    create_readme      => 1,
 );
 
 $builder->create_build_script();

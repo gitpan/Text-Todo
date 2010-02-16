@@ -1,13 +1,10 @@
 .cvsignore
 bin/todo.pl
 Build.PL
-Build.PL.orig
 cgi-bin/todo.cgi
 Changes
 lib/Text/Todo.pm
-lib/Text/Todo.pm.orig
 lib/Text/Todo/Entry.pm
-lib/Text/Todo/Entry.pm.orig
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -16,13 +13,11 @@ README
 t/00.load.t
 t/entry.t
 t/list.t
-t/list.t.orig
 t/perlcritic.t
 t/perlcriticrc
 t/pod-coverage.t
 t/pod.t
 t/read_todo.t
-t/read_todo.t.orig
 t/special_tags.t
 t/todo.cfg
 t/todo.list.txt

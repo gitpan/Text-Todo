@@ -1,27 +1,28 @@
 ---
 name: Text-Todo
-version: v0.1.1
+version: v0.2.0
 author:
   - 'Andrew Fresh <andrew@cpan.org>'
-abstract: Perl interface to todo_txt files
+abstract: Perl interface to todotxt files
 license: perl
 resources:
   license: http://dev.perl.org/licenses/
+build_requires:
+  Test::More: 0.82
 requires:
   Carp: 0
   Class::Std::Utils: 0
   File::Spec: 0
-  Test::More: 0.82
   version: 0
 configure_requires:
   Module::Build: 0.340201
 provides:
   Text::Todo:
     file: lib/Text/Todo.pm
-    version: v0.1.1
+    version: v0.2.0
   Text::Todo::Entry:
     file: lib/Text/Todo/Entry.pm
-    version: v0.1.1
+    version: v0.2.0
 generated_by: Module::Build version 0.340201
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
