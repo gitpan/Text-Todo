@@ -1,6 +1,6 @@
 package Text::Todo::Entry;
 
-# $AFresh1: Entry.pm,v 1.30 2010/02/16 01:13:12 andrew Exp $
+# $AFresh1: Entry.pm,v 1.29 2010/02/14 06:08:07 andrew Exp $
 
 use warnings;
 use strict;
@@ -8,7 +8,7 @@ use Carp;
 
 use Class::Std::Utils;
 
-use version; our $VERSION = qv('0.2.0');
+use version; our $VERSION = qv('0.2.1');
 
 {
 

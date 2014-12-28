@@ -7,7 +7,7 @@
 #       AUTHOR:  Andrew Fresh (AAF), andrew@cpan.org
 #      COMPANY:  Red River Communications
 #      CREATED:  01/09//10 17:43
-#     REVISION:  $AFresh1: special_tags.t,v 1.7 2010/02/14 00:50:56 andrew Exp $
+#     REVISION:  $AFresh1: special_tags.t,v 1.6 2010/02/13 23:06:34 andrew Exp $
 #===============================================================================
 
 use strict;

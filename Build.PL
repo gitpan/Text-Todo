@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Module::Build;
 
-# $AFresh1: Build.PL,v 1.10 2010/02/16 01:13:12 andrew Exp $
+# $AFresh1: Build.PL,v 1.9 2010/01/22 18:15:56 andrew Exp $
 
 my $builder = Module::Build->new(
     module_name       => 'Text::Todo',
